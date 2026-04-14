@@ -2,7 +2,7 @@
 weight: 2
 title: Lab 1 - Evolving a Cepheid into the Instability Strip
 linkTitle: Lab 1
----
+sssssssss---
 
 Lab 1 is where the Friday sequence starts. The point is to evolve a classical Cepheid model in the $3$-$8\,M_\odot$ range, follow it into core helium burning, and save the models that we will reuse in Lab 2.
 
