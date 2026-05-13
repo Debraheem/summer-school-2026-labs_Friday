@@ -419,10 +419,9 @@ contains
                integer, intent(out)     :: retcode
 
                character(LEN=strlen) :: filename
-               integer               :: ierr, unit, k, model_number, num_written, max_to_write !, order_target
+               integer               :: ierr, unit, k, num_written, max_to_write 
                complex(dp)           :: cfreq
                real(dp)              :: freq, growth, period
-               type(grid_t)          :: gr
                type (star_info), pointer :: s
 
 
@@ -439,28 +438,16 @@ contains
                num_written = num_written + 1
                ipar(3) = num_written
 
-               model_number = s% model_number
                cfreq = md% freq('HZ')
                growth = AIMAG(cfreq) ! in seconds
                freq = REAL(cfreq) ! in seconds
-               !period = 0 ! days
                period = 1d0/freq ! in seconds
-               if (growth > 0d0) then ! unstable
-                  write(*, 100) model_number, md%n_pg, &
-                     freq, period, period/(24*3600), 1d0/(2*pi*24*3600*AIMAG(cfreq)), &
-                     (2d0*pi*growth)/freq, freq/(2d0*pi*growth)
-100                  format(2I8,E20.4,5F20.4)
-               else ! stable
-                  write(*, 110) model_number, md%n_pg, &
-                     freq, period, period/(24*3600), 'stable'
-110               format(2I8,E20.4,2F20.4,A20)
-               end if              
-
+   
                ! xtra_arrays are used to store data
                s% ixtra1_array(num_written) = md%n_pg
                s% xtra1_array(num_written) = period/(24*3600) ! Save period in days 
-               s% xtra2_array(num_written) =  (2d0*pi*growth)/freq ! Save fractional growth rate 
-
+               s% xtra2_array(num_written) = 4d0*pi*growth/freq  ! Save fractional growth rate with the same definition as RSP
+   
                retcode = 0
 
             end subroutine process_mode_cepheid
