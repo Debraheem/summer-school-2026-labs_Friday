@@ -508,9 +508,10 @@ contains
                integer, intent(out)     :: retcode
 
                character(LEN=strlen) :: filename
-               integer               :: ierr, unit, k, num_written, max_to_write 
+               integer               :: ierr, unit, k, model_number, num_written, max_to_write !, order_target
                complex(dp)           :: cfreq
                real(dp)              :: freq, growth, period
+               type(grid_t)          :: gr
                type (star_info), pointer :: s
 
 
@@ -527,6 +528,7 @@ contains
                num_written = num_written + 1
                ipar(3) = num_written
 
+               model_number = s% model_number
                cfreq = md% freq('HZ')
                growth = AIMAG(cfreq) ! in seconds
                freq = REAL(cfreq) ! in seconds

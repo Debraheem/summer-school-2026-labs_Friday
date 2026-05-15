@@ -313,6 +313,7 @@ contains
          integer :: gyre_interval, max_mode_num, mode_l, save_mod_interval, ipar(3), Teff, lumi
          real(dp), parameter :: gyre_logTeff_min = 3.66d0
          real(dp) :: save_mod_Teff_limit, rpar(1), mass
+
          real(dp) :: logTeff     ! log value of the effective temperature
 
          ierr = 0
@@ -320,30 +321,24 @@ contains
          if (ierr /= 0) return
          extras_finish_step = keep_going
 
-
-         ! ====== TODO: add stopping condition for effective temperature! ======
-         ! Lynn: Remove these lines for the starting directory
-         logTeff = safe_log10(s% Teff)
-
-      !  if (logTeff .le. 3.7d0) then
-      !     extras_finish_step = terminate
-      !     write(*, *) '===== you have reached the end of the RGB! ===='
-      !     s% termination_code = t_extras_finish_step
-      !  end if
-
-
-         ! ======= Routines for the core-helium burning part of the evolution ! ======
          call_gyre = .false. ! Assume we don't need to call GYRE
          need_to_save_model = .false.
 
          ! Save user specified parameters with meaningful names
-         ! Lynn: set all to (1) for the starting directory -- they'll look up the correct values as a task.
          gyre_interval = s% x_integer_ctrl(1)! Sets how often to call GYRE in the inlist
-         max_mode_num = s% x_integer_ctrl(2) ! Sets how many modes should be saved
-         mode_l = s% x_integer_ctrl(3)       ! Sets l value of modes
-         save_mod_interval = s% x_integer_ctrl(4) ! Sets how often to save .mod files
-         save_mod_Teff_limit = s% x_ctrl(1) ! Sets minimum Teff necessary to save a model
+         max_mode_num = s% x_integer_ctrl(1) ! Sets how many modes should be saved
+         mode_l = s% x_integer_ctrl(1)       ! Sets l value of modes
+         save_mod_interval = s% x_integer_ctrl(1) ! Sets how often to save .mod files
 
+         save_mod_Teff_limit = s% x_ctrl(1) ! Sets minimum Teff necessary to save a model
+         logTeff = safe_log10(s% Teff)
+
+         ! ====== TODO: add stopping condition for effective temperature! ======
+!         if (logTeff .le. 3.7d0) then
+!            extras_finish_step = terminate
+!            write(*, *) '===== you have reached the end of the RGB! ===='
+!            s% termination_code = t_extras_finish_step
+!         end if
 
          ! Zero out period and growth rate information from previous step, if we don't call GYRE then values stay 0.
          F_period = 0d0
@@ -352,7 +347,6 @@ contains
          O1_growth = 0d0
          O2_period = 0d0
          O2_growth = 0d0
-
 
          ! Check if in He burning and we're calling GYRE.
          in_gyre_region = s% center_h1 <= 1d-12 .and. &
@@ -508,9 +502,10 @@ contains
                integer, intent(out)     :: retcode
 
                character(LEN=strlen) :: filename
-               integer               :: ierr, unit, k, num_written, max_to_write 
+               integer               :: ierr, unit, k, model_number, num_written, max_to_write !, order_target
                complex(dp)           :: cfreq
                real(dp)              :: freq, growth, period
+               type(grid_t)          :: gr
                type (star_info), pointer :: s
 
 
@@ -527,6 +522,7 @@ contains
                num_written = num_written + 1
                ipar(3) = num_written
 
+               model_number = s% model_number
                cfreq = md% freq('HZ')
                growth = AIMAG(cfreq) ! in seconds
                freq = REAL(cfreq) ! in seconds

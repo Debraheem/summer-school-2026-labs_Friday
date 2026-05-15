@@ -51,9 +51,9 @@ It is also helpful if you still have the following information from Lab 1 writte
 
 ## Where You Will Be Working
 
-The website source directories for this lab are:
+The relevant work directories for this lab are:
 
-- `content/friday/MESA_models/lab1_evolve_a_cepheid/cepheid_evolution_gyre_in_mesa/`
+- `lab1_work_dir/`
 - `content/friday/MESA_models/lab3_Hertzsprung_progression/TDC_Cepheid/`
 
 However, during the lab you should not work inside the website source tree. Instead, create a separate local Lab 3 working directory inside the same Friday workspace you used for Lab 1.
@@ -92,7 +92,7 @@ Go to your Lab 1 work directory and look inside `mod_dir/`. These are the saved 
 In the standard Friday setup, the filenames are written in the form
 
 ```text
-modelnumber_Teff.mod
+modelnumber_currentmass_Teff_luminosity.mod
 ```
 
 or in a similar format that still identifies the saved Cepheid model.
@@ -143,26 +143,12 @@ Open `inlist_pulses` in your editor.
 Find the line
 
 ```fortran
-load_model_filename = 'mod_dir/384_5312.mod'
+load_model_filename = 'mod_dir/YOUR_MODEL.mod'
 ```
-
-and replace the filename with the one you copied into your local `mod_dir/`.
-
-Now also check this line:
-
-```fortran
-x_ctrl(7) = 12d0 ! expected period in days
-```
-
-This sets the expected pulsation period in days.
 
 For your first run:
 
-- update `load_model_filename`
-- update `x_ctrl(7)` if you already know the approximate fundamental period from Lab 1 or Lab 2
-- otherwise, leave the default value alone unless the TA tells you to change it
-
-If you ran Lab 2, the best value to use here is usually the fundamental-mode period you already estimated for the same saved structure. If you did not run Lab 2, use the best period estimate you can recover from the Lab 1 GYRE output for that model.
+- update `load_model_filename` so it points to the model you copied into your local `mod_dir/`
 
 > [!NOTE]
 > In this setup, MESA loads the saved stellar structure, removes the core, remeshes the envelope for time-dependent convection, and then uses a GYRE kick to seed the fundamental radial mode.
@@ -206,6 +192,7 @@ Useful quantities already written by the setup include:
 - `delta_R`
 - `delta_logL`
 - `delta_Mag`
+- `KE_growth`
 - `KE_growth_avg`
 - `num_periods`
 
@@ -376,7 +363,6 @@ Try these in order:
 - verify that you chose a genuine Cepheid candidate from Lab 1
 - if you completed Lab 2, switch to a model that showed positive fundamental-mode growth there
 - restart with `./re` and let it continue longer
-- if you know the expected fundamental period, update `x_ctrl(7)`
 - switch to a TA-recommended fallback model rather than spending the whole lab debugging one difficult case
 
 {{< /details >}}
