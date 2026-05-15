@@ -324,7 +324,7 @@ contains
          ! ====== TODO: add stopping condition here! ======
       !  if(s% center_h1 <= 1d-12 .and. safe_log10(s% power_he_burn) >1d0) then
       !     extras_finish_step = terminate
-      !     write(*, *) '===== you have reached the end of the RGB! ===='
+      !     write(*, *) '===== you have reached the base of the RGB! ===='
       !     s% termination_code = t_extras_finish_step
       !  end if
          ! ================================================
