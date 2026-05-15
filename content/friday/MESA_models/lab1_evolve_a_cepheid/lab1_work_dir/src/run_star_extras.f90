@@ -313,8 +313,11 @@ contains
          integer :: gyre_interval, max_mode_num, mode_l, save_mod_interval, ipar(3), Teff, lumi
          real(dp), parameter :: gyre_logTeff_min = 3.66d0
          real(dp) :: save_mod_Teff_limit, rpar(1), mass
-
          real(dp) :: logTeff     ! log value of the effective temperature
+
+         ! ====== TODO: add stopping condition here! ======
+
+         ! ================================================
 
          ierr = 0
          call star_ptr(id, s, ierr)
